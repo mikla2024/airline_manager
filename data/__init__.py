@@ -9,7 +9,6 @@ os.environ['test_io_table'] = 'temp_notes'
 os.environ['io_table'] = 'notes'
 os.environ['username'] = 'mikla'
 
-
 try:
     Database().setup_database()
 

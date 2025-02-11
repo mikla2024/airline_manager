@@ -1,4 +1,3 @@
-
 from data import Database
 from datetime import datetime
 from typing import Optional
@@ -37,8 +36,6 @@ class FlightManager:
                 print('ERROR in INSERT INTO flights')
 
 
-
-
 class Flight:
     def __init__(self):
         self._name: str
@@ -66,8 +63,6 @@ class Flight:
     @property
     def arr_dt(self) -> datetime:
         return self._arr_dt
-
-
 
     @name.setter
     def name(self, name: str):
@@ -99,9 +94,9 @@ class Flight:
             raise ValueError
 
     @staticmethod
-    def pars_date (dt_str: str) -> datetime:
+    def pars_date(dt_str: str) -> datetime:
         try:
-            return datetime.strptime(dt_str,'%d.%m.%Y %H:%M')
+            return datetime.strptime(dt_str, '%d.%m.%Y %H:%M')
 
         except ValueError:
             raise ValueError
@@ -109,10 +104,3 @@ class Flight:
 
 if __name__ == '__main__':
     pass
-
-
-
-
-
-
-

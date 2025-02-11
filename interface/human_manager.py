@@ -2,7 +2,6 @@ import sqlite3
 from datetime import datetime
 from abc import ABC
 
-
 from data import Database
 
 
@@ -15,6 +14,7 @@ class Human(Creature):
         self._name: str
         self._dob: datetime
         self._surname: str
+
 
 class Employee(Human):
     def __init__(self) -> None:
@@ -80,7 +80,7 @@ class Employee(Human):
     @staticmethod
     def convert_date(dt_str) -> datetime:
         try:
-            return datetime.strptime(dt_str,'%d.%m.%Y')
+            return datetime.strptime(dt_str, '%d.%m.%Y')
         except ValueError:
             raise ValueError('Дата должна быть в формате дд.мм.гггг')
 
@@ -108,7 +108,6 @@ class HRManager:
             except sqlite3.IntegrityError as e:
 
                 raise AttributeError(e)
-
 
 
 if __name__ == '__main__':

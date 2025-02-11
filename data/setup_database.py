@@ -4,7 +4,6 @@ import sys
 from typing import Optional
 
 
-
 class Database:
 
     def __init__(self, db_name: Optional[str] = None) -> None:
@@ -32,7 +31,7 @@ class Database:
     @staticmethod
     def _dict_factory(cursor, row):
         columns: list = [description[0] for description in cursor.description]
-        return {k:v for k, v in zip(columns, row)}
+        return {k: v for k, v in zip(columns, row)}
 
     def fetch_dict(self, sql: str, *args) -> list[dict] | None:
         """Возвращает любое количество столбцов построчно в виде словаря {column: value}"""
@@ -63,7 +62,6 @@ class Database:
     def get_lastrowid(self):
         return self._last_rowid
 
-
     def exec(self, sql: str, *args):
         self._cursor.execute(sql, args)
         self._last_rowid = self._cursor.lastrowid
@@ -73,7 +71,7 @@ class Database:
 
     def setup_database(self) -> None:
         try:
-                self._cursor.executescript ("""
+            self._cursor.executescript("""
                     BEGIN;
                     PRAGMA foreign_keys = 1;
 
@@ -128,9 +126,8 @@ class Database:
                     COMMIT;
                 """)
 
-
-                try:
-                    self._cursor.executescript("""
+            try:
+                self._cursor.executescript("""
                                 
                                 BEGIN;
                                 INSERT INTO airports (icao_code, iata_code, city)
@@ -146,11 +143,11 @@ class Database:
                                 COMMIT;
                             """)
 
-                except sqlite3.IntegrityError as e:
-                    pass
-                    # print('INSERT departments error')
+            except sqlite3.IntegrityError as e:
+                pass
+                # print('INSERT departments error')
 
-                self._connection.commit()
+            self._connection.commit()
 
         except sqlite3.OperationalError as e:
             print(e)

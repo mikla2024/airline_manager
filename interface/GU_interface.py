@@ -4,6 +4,7 @@ import PySimpleGUI as sg
 from typing import Optional
 from datetime import datetime, date
 
+
 class GUInterface:
 
     def __init__(self):
@@ -15,7 +16,6 @@ class GUInterface:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if not self._window: self._window.close()
-
 
 
 class GUInterfaceFlight(GUInterface):
@@ -32,10 +32,10 @@ class GUInterfaceFlight(GUInterface):
              sg.Combo(values=lst_ap, k="-dep_ap-", enable_events=True, s=10, readonly=True)],
             [sg.Text("Выберете а/п прилета:", s=20),
              sg.Combo(values=lst_ap, k="-arr_ap-", enable_events=True, s=10, readonly=True)],
-            [sg.Text("Дата вылета:", s=20), sg.InputText(key="-dep_date-", s=10,default_text='10.10.2025' ),
-                sg.Text("Время вылета UTC:", s=15), sg.InputText(key="-dep_time-", s=5,default_text='10:00')],
-            [sg.Text("Дата прилета:", s=20),sg.InputText(key="-arr_date-", s=10, default_text='10.10.2025'),
-             sg.Text("Время прилета UTC:", s=15), sg.InputText(key="-arr_time-", s=5,default_text='15:00')],
+            [sg.Text("Дата вылета:", s=20), sg.InputText(key="-dep_date-", s=10, default_text='10.10.2025'),
+             sg.Text("Время вылета UTC:", s=15), sg.InputText(key="-dep_time-", s=5, default_text='10:00')],
+            [sg.Text("Дата прилета:", s=20), sg.InputText(key="-arr_date-", s=10, default_text='10.10.2025'),
+             sg.Text("Время прилета UTC:", s=15), sg.InputText(key="-arr_time-", s=5, default_text='15:00')],
             [sg.Button("Ok", k="-add_new-"), sg.Button("Cancel")]
         ]
         self._window = sg.Window('Добавить новый рейс', self._layout)
@@ -78,12 +78,12 @@ class GUInterfaceEmployee(GUInterface):
             [sg.Text("Департамент:", s=30),
              sg.Combo(values=self._lst_dpt, readonly=True,
                       k="-dep_name-", enable_events=True, s=15)],
-            [sg.Text("Фамилия (минимум 3 символа):", s=30),sg.InputText(k="-surname-", s=15)],
+            [sg.Text("Фамилия (минимум 3 символа):", s=30), sg.InputText(k="-surname-", s=15)],
             [sg.Text("Имя:", s=30), sg.InputText(k="-name-", s=15)],
             [sg.Text("Дата рождения:", s=30), sg.InputText(k="-dob-", s=15)],
             [sg.Text("Буквенный код (уникальный)", s=30), sg.InputText(k='-l_code-', s=15)],
             [sg.Text("Должность", s=30),
-             sg.Combo(values=[], k='-job_title-',s=15, readonly=True )],
+             sg.Combo(values=[], k='-job_title-', s=15, readonly=True)],
             [sg.Text("Дата приема на работу:", s=30), sg.InputText(key="-job_start-", s=15),
              sg.Button("Сегодня", k='-today-')],
             [sg.Button("Ok", key="-add_new-"), sg.Button("Cancel")]
@@ -94,7 +94,6 @@ class GUInterfaceEmployee(GUInterface):
     @property
     def get_layout(self):
         return self._layout
-
 
     def event_loop(self):
 
@@ -114,13 +113,13 @@ class GUInterfaceEmployee(GUInterface):
                     new_empl.job_start = values['-job_start-']
 
                     interface.HRManager().add_new(new_empl)
-                    for i,f in enumerate(self._window.element_list()):
-                        if isinstance(f,(sg.InputText, sg.Combo)) :
+                    for i, f in enumerate(self._window.element_list()):
+                        if isinstance(f, (sg.InputText, sg.Combo)):
                             f.update(value='')
 
                 except ValueError:
                     sg.popup('Одно или несколько значений '
-                             'имеют неверный формат',title='Ошибка')
+                             'имеют неверный формат', title='Ошибка')
 
                     continue
 
@@ -139,24 +138,22 @@ class GUInterfaceEmployee(GUInterface):
 
             elif event == '-dep_name-':
                 with Database() as db:
-                   lst_jobs = db.fetch_lst(
-                    'SELECT job_title FROM job_titles WHERE depart_id = '
-                    f'(SELECT depart_id FROM departments WHERE dep_name = "{values['-dep_name-']}")'
-                        )
+                    lst_jobs = db.fetch_lst(
+                        'SELECT job_title FROM job_titles WHERE depart_id = '
+                        f'(SELECT depart_id FROM departments WHERE dep_name = "{values['-dep_name-']}")'
+                    )
                 if not lst_jobs: lst_jobs = ['']
-                element = self._window['-job_title-'] # type:sg.Combo
-                element.update(values=lst_jobs, size=(15,15), value=lst_jobs[0])
+                element = self._window['-job_title-']  # type:sg.Combo
+                element.update(values=lst_jobs, size=(15, 15), value=lst_jobs[0])
 
             elif event == '-today-':
-                element = self._window['-job_start-'] # type: sg.InputText
-                element.update(value= datetime.strftime(datetime.today(),'%d.%m.%Y'))
-
+                element = self._window['-job_start-']  # type: sg.InputText
+                element.update(value=datetime.strftime(datetime.today(), '%d.%m.%Y'))
 
     def _reset_backgr_color(self):
         for f in self._window.element_list():
             if isinstance(f, (sg.InputText, sg.Combo)):
                 f.update(background_color='White')
-
 
 
 if __name__ == '__main__':
